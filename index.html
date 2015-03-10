@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+	<head>
+	    <meta charset="utf-8">
+	    <title>HITS</title>
+	    <link rel="stylesheet" href="css/app.css">
+      <script src="./js/jquery-1.9.1.min.js"></script>
+      <link rel="stylesheet" href="http://code.jquery.com/ui/1.11.3/themes/smoothness/jquery-ui.css">
+  
+      <script src="http://code.jquery.com/ui/1.11.3/jquery-ui.js">
+  </script>
+  <!-- <link rel="stylesheet" href="/resources/demos/style.css"> -->
+    <style>
+      /*body, input{
+        background-color: #FFE;
+
+      }*/
+      svg {
+        background-color: #F6F9ED;
+
+      }
+      #slider {
+        display:none;
+      }
+      #navlist li {
+         float: left;
+        display: inline;
+        list-style-type: none;
+        padding-right: 20px;
+        }
+      .ui-slider-horizontal {
+          height: 10px;
+          width: 400px;
+      }
+      section {
+        margin-left: 30px;
+
+      }
+
+
+    </style>
+  	</head>
+    
+  	<body>
+      <div id="navcontainer">
+        <ul id="navlist">
+        <li>
+          <p><label for="numNodes" style="display:inline;">Number of Nodes (n):</label>
+            <input type="text" id="numNodes" style="display:inline;border: 0; font-weight: bold; font-size:20px;"></input></p>
+             <div id="numNodesSlider" class="ui-slider ui-slider-horizontal ui-widget ui-widget-content ui-corner-all" aria-disabled="false"><div class="ui-slider-range ui-corner-all ui-slider-range-max"></div><a class="ui-slider-handle ui-state-default ui-corner-all" href="#"></a></div>
+            
+             <p><label for="ProbLinks" style="display:inline;">Probability of Links (p):</label>
+            <input type="text" id="ProbLinks" style="display:inline;border: 0; font-weight: bold; font-size:20px;"></input></p>
+             <div id="ProbLinksSlider" class="ui-slider ui-slider-horizontal ui-widget ui-widget-content ui-corner-all" aria-disabled="false"><div class="ui-slider-range ui-widget-header ui-corner-all ui-slider-range-max"></div><a class="ui-slider-handle ui-state-default ui-corner-all" href="#"></a></div>
+            
+        <p>
+       <input type="submit" value="Generate New" id="btnGenerateNew" role="button" style="width: 166px;" onclick="generateNew()"></p>
+    
+  
+       </li>
+        <li> 
+          <p><label for="iterationNum" style="display:inline; margin-left: 30px;">Iteration Number (#):</label>
+         <input type="text" id="iterationNum" style="display:inline;border: 0; font-weight: bold; font-size:20px;"></input></p>
+        <div id="slider" class="ui-slider ui-slider-horizontal ui-widget ui-widget-content ui-corner-all" aria-disabled="false"></div>
+
+
+        <p><input type="submit" value="Explore Convergence" id="exploreConvergenceButton" role="button" style="width: 166px;"> </p>
+     </li>
+        
+        </ul>
+      </div>
+     
+
+    </body>	
+	   <script>
+     $(document).ready(function() {
+            document.getElementById('numNodes').value=10;
+            $( "#numNodesSlider" ).slider({
+              // ignoreorientation:"vertical",
+              range: "min", 
+              min: 6,
+              max: 30,
+              value: 10,
+              slide: function( event, ui ) {
+                document.getElementById('numNodes').value=ui.value;
+                initialNumberPages = document.getElementById('numNodes').value=ui.value;
+                 // $('#dampingFactor').text(ui.value);
+                // console.log(ui.value);
+                // $( "#dampingFactor" ).val( ui.value/100 );
+                // updatePageRankCalculations();
+              }
+
+            });
+
+            document.getElementById('ProbLinks').value=0.2;
+            $( "#ProbLinksSlider" ).slider({
+              range: "min", 
+              min: 0,
+              max: 100,
+              value: 20,
+              slide: function( event, ui ) {
+                document.getElementById('ProbLinks').value=(ui.value/100);
+                probabilityOfLink = document.getElementById('ProbLinks').value=(ui.value/100);
+                 // $('#dampingFactor').text(ui.value);
+                // console.log(ui.value);
+                // $( "#dampingFactor" ).val( ui.value/100 );
+                // updatePageRankCalculations();
+              }
+
+            });
+            
+      });
+
+     </script>
+  	<script src="http://d3js.org/d3.v3.min.js"></script>
+    <script type="text/javascript" src="js/sylvester.src.js"></script>
+  	<script src="js/app.js"></script>
+</html>
