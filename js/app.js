@@ -77,19 +77,22 @@ $('#slider').slider({
     authorityVectors.push(Vector.One(currentNumberPages).elements);
 
     while (distance > threshold) {
-
+      // console.log(iteration);
       iteration++;
       var hubvec = [],
           authorityvec = [];
       var norm = 0;
       
       for (i in nodes) { 
+        console.log("tt"+i);
         nodes[i].authority = getAuthority(nodes[i]);
+        console.log(nodes[i].authority);
         norm += norm + Math.pow(nodes[i].authority, 2);
 
       }
       for (i in nodes) {
         nodes[i].authority = nodes[i].authority/Math.sqrt(norm);
+        console.log(nodes[i].authority);
         authorityvec.push(nodes[i].authority);
       }
 
@@ -97,6 +100,7 @@ $('#slider').slider({
       norm = 0;
       for (i in nodes) {
         nodes[i].hub = getHub(nodes[i]);
+        console.log(nodes[i].hub);
         norm += norm + Math.pow(nodes[i].hub, 2);
       }
       for (i in nodes) {
@@ -519,6 +523,7 @@ $('#slider').slider({
         // console.log("test");
         // select node
         mousedown_node = d;
+        console.log(d.id);
         if(mousedown_node === selected_node) selected_node = null;
         else selected_node = mousedown_node;
         selected_link = null;
@@ -610,7 +615,7 @@ $('#slider').slider({
     //d3.event.preventDefault();
     
     // because :active only works in WebKit?
-    // svg.classed('active', true);
+    svg.classed('active', true);
     // console.log("nousegodw");
     if(d3.event.ctrlKey || mousedown_node || mousedown_link || isExploringConvergence) return;
 
@@ -660,15 +665,63 @@ $('#slider').slider({
 
   function spliceLinksForNode(node) {
     var toSplice = links.filter(function(l) {
-      return (l.source === node || l.target === node);
+      // console.log(l);
+      return (l.source.id == node.id || l.target.id == node.id);
     });
     toSplice.map(function(l) {
+
+        if (l.source.id == node.id) {
+          for(i in node.outboundLinks) {
+             // console.log(node.outboundLinks[i]);
+              for (j in node.outboundLinks[i].target.inboundLinks) {
+                var newlinks = [];
+                // console.log(j);
+                // console.log(node.outboundLinks[i].target.inboundLinks[j]);
+                // console.log(node);
+                if (node.outboundLinks[i].target.inboundLinks[j].source.id != node.id) {
+                  // console.log(node.outboundLinks[i].target.inboundLinks[j]);
+                  newlinks.push(node.outboundLinks[i].target.inboundLinks[j]);
+                  
+                }
+              }
+              // console.log(newlinks);
+              node.outboundLinks[i].target.inboundLinks = newlinks;
+          }
+       }
+        if (l.target.id == node.id) {
+          for(i in node.inboundLinks) {
+             // console.log(node.outboundLinks[i]);
+              for (j in node.inboundLinks[i].source.outboundLinks) {
+                var newlinks = [];
+                // console.log(j);
+                // console.log(node.inboundLinks[i].source.outboundLinks[j]);
+                // console.log(node);
+                if (node.inboundLinks[i].source.outboundLinks[j].target.id != node.id) {
+                  // console.log(node.outboundLinks[i].target.inboundLinks[j]);
+                  newlinks.push(node.inboundLinks[i].source.outboundLinks[j]);
+                  
+                }
+              }
+              // console.log(newlinks);
+              node.inboundLinks[i].source.outboundLinks = newlinks;
+          }
+       }
+
       links.splice(links.indexOf(l), 1);
     });
   }
 
   // only respond once per keydown
   var lastKeyDown = -1;
+
+  function getIndex(arr, idx) {
+    for (i in arr) {
+      if (idx == arr[i].id) {
+        return i;
+      }
+    }
+
+  }
 
   function keydown() {
     d3.event.preventDefault();
@@ -687,13 +740,17 @@ $('#slider').slider({
       case 8: // backspace
       case 46: // delete
         if(selected_node) {
-          nodes.splice(nodes.indexOf(selected_node), 1);
+          console.log(selected_node);
           spliceLinksForNode(selected_node);
+          console.log(getIndex(nodes, selected_node.id));
+          nodes.splice(getIndex(nodes, selected_node.id), 1);
+          
         } else if(selected_link) {
           links.splice(links.indexOf(selected_link), 1);
         }
         selected_link = null;
         selected_node = null;
+
         restart();
         break;
       case 66: // B
@@ -728,17 +785,16 @@ $('#slider').slider({
 
   isExploringConvergence = false;
 
-  var showHideConvergenceDiv = function(bShow, recalculate) {
+  var showHideConvergenceDiv = function(bShow) {
   
-      // if (isUndefined(recalculate)) {
-      //   recalculate = true; 
-      // }
+
       var theDiv = $('#slider');
       var theButton = $('#exploreConvergenceButton');
       
       
 
-      if (!bShow) {
+    if (!bShow) {
+        document.getElementById('iterationNum').value=0;
         theDiv.fadeOut(); // bar disappear
         theButton.attr('value',"Explore Convergence");
      
@@ -777,7 +833,8 @@ $('#slider').slider({
   // app starts here
   svg.on('mousedown', mousedown)
     .on('mousemove', mousemove)
-    .on('mouseup', mouseup)
+    .on('mouseup', mouseup);
+  d3.select(window)
     .on('keydown', keydown)
     .on('keyup', keyup);
 

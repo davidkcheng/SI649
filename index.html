@@ -3,7 +3,7 @@
 	<head>
 	    <meta charset="utf-8">
 	    <title>HITS</title>
-	    <link rel="stylesheet" href="css/app.css">
+	    <link rel="stylesheet" href="./css/app.css">
       <script src="./js/jquery-1.9.1.min.js"></script>
       <link rel="stylesheet" href="http://code.jquery.com/ui/1.11.3/themes/smoothness/jquery-ui.css">
   
@@ -15,6 +15,12 @@
         background-color: #FFE;
 
       }*/
+      path.link {
+        fill: none;
+        stroke: #404040;
+        stroke-width: 3px;
+        cursor: default;
+      }
       svg {
         background-color: #F6F9ED;
 
@@ -54,7 +60,7 @@
              <div id="ProbLinksSlider" class="ui-slider ui-slider-horizontal ui-widget ui-widget-content ui-corner-all" aria-disabled="false"><div class="ui-slider-range ui-widget-header ui-corner-all ui-slider-range-max"></div><a class="ui-slider-handle ui-state-default ui-corner-all" href="#"></a></div>
             
         <p>
-       <input type="submit" value="Generate New" id="btnGenerateNew" role="button" style="width: 166px;" onclick="generateNew()"></p>
+       <input type="submit" value="Generate New Graph" id="btnGenerateNew" role="button" style="width: 166px;" onclick="generateNew()"></p>
     
   
        </li>
@@ -65,8 +71,18 @@
 
 
         <p><input type="submit" value="Explore Convergence" id="exploreConvergenceButton" role="button" style="width: 166px;"> </p>
+         <p style="width: 350px;">Circles: web pages. <br> Links: hyperlinks.</p>
+         <p style="width: 350px;">The circle size encode the hub value<br> The darness of color encodes the authority value</p>
      </li>
-        
+        <li>
+          <p style="width: 350px;">This is the interactive visualization of <b>Hyperlink-Induced Topic Search (HITS)</b>. Choose the number of nodes or probability of links (higher probability means probably more links!) to generate a new graph. <br><br>
+          You may also edit the current graph: <br>
+          <b>Click a node/link + delete: </b> delete node/link <br>
+          <b>Click anywhere: </b> create new node <br>
+          <b>Drag a line from node to node:</b> create new link <br>
+          Note: editting graph is not available under convergence exploration mode
+          </p>
+        </li>
         </ul>
       </div>
      
@@ -74,13 +90,13 @@
     </body>	
 	   <script>
      $(document).ready(function() {
-            document.getElementById('numNodes').value=10;
+            document.getElementById('numNodes').value=12;
             $( "#numNodesSlider" ).slider({
               // ignoreorientation:"vertical",
               range: "min", 
               min: 6,
-              max: 30,
-              value: 10,
+              max: 20,
+              value: 12,
               slide: function( event, ui ) {
                 document.getElementById('numNodes').value=ui.value;
                 initialNumberPages = document.getElementById('numNodes').value=ui.value;

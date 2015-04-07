@@ -14,7 +14,7 @@ svg:not(.active):not(.ctrl) {
 
 path.link {
   fill: none;
-  stroke: #000;
+  stroke: #FFF;
   stroke-width: 4px;
   cursor: default;
 }
